@@ -9,7 +9,9 @@ import DatosProvider from './context/DatosProvider.jsx';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <DatosProvider>
+        <App />
+      </DatosProvider>
     </BrowserRouter>
   </StrictMode>
 )
