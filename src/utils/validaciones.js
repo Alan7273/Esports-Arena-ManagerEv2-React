@@ -1,7 +1,7 @@
 export function validarInscripcion({ torneo, equipo, juegos, jugadores, hoy }) {
     const errTorneo = [];
     const errEquipo = [];
-    const nombreJuego = (id) => juegos.find(j) => j.id === id)?.nombre ?? '-';
+    const nombreJuego = (id) => juegos.find((j) => j.id === id)?.nombre ?? '-';
 
     if(!torneo) errTorneo.push('Selecione un torneo');
     if(!equipo) errEquipo.push('Selecione un equipo');
