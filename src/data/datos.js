@@ -1,5 +1,3 @@
-// no se ocupa aqui pero para tenerlo guardado para colocarlo en las otras partes del codigo
-// jorge esto es un apunte no mas de los datos que van en las otras partes donde se coloca el registro de cada cosa
 export const juegos = [
     {id: "g1", nombre: "valorant", minIntegrantes: 5},
     {id: "g2", nombre: "League of Legends", minIntegrantes: 5},
@@ -51,18 +49,6 @@ export const torneos = [
         modalidad: "Individual", cupoOcupado: 32, cupoMax: 32,
         fechaCierreInscripcion: "2026-07-01", fechaInicio: "2026-07-05",
         participantes: [], partidas: [], posiciones: [],
-        premios: [{ posicion: 1, premio: "Mouse gamer" }]
-    }
+        premios: [{ posicion: 1, premio: "Mouse gamer" }],
+    },
 ];
-
-function nombreJuego(id) {
-    const j = juegos.find(x => x.id === id);
-    return j ? j.nombre : "—";
-}
-
-function nombreParticipante(id) {
-    const eq = equipos.find(e => e.id === id);
-    if (eq) return eq.nombre;
-    const jg = jugadores.find(j => j.id === id);
-    return jg ? jg.apodo : id;
-}
