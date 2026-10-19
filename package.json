@@ -9,8 +9,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "repaso": "node repaso-js/repaso.js",
-    "test": "karma start",
-    "test:watch": "karma start --no-single-run --auto-watch"
+    "test": "karma start karma.conf.cjs",
+    "test:watch": "karma start karma.conf.cjs --no-single-run --auto-watch"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
