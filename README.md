@@ -1,181 +1,189 @@
-# eSports Arena Manager — Frontend React (EP2)
+# eSports Arena Manager (React)
 
-Aplicación web para gestionar torneos de eSports: ver torneos, filtrarlos, revisar su detalle, inscribir equipos, crear equipos y administrar el perfil de un jugador.
+Aplicación web para gestionar torneos de eSports: ver torneos, inscribir equipos, crear equipos y administrar el perfil de un jugador. Proyecto de **Evaluación Parcial 2**, desarrollado con **React + Vite**, **React Bootstrap** y pruebas unitarias con **Jasmine + Karma**.
 
-Es la migración del frontend de la **EP1** (HTML5 + CSS3 + JavaScript vanilla) a **React**, usando Vite como herramienta de desarrollo, Bootstrap para el diseño y Karma + Jasmine para las pruebas.
-
-> Proyecto semestral — Desarrollo FullStack I — Evaluación Parcial 2 (EP2).
-> No usa backend: los datos son simulados y viven en memoria mientras la página está abierta.
+> **Integrantes:** Alan Cubillos, Jorge Gonzalez, Martín Espinoza.
+> **Asignatura / Sección:** Desarrollo Fullstack II - 003D.
+> **Docente:** Cesar Alexander Carrasco Carre.
 
 ---
 
-## Tecnologías
+## Índice
 
-| Herramienta | Versión | Para qué se usa |
+1. [Descripción del proyecto](#1-descripción-del-proyecto)
+2. [Tecnologías](#2-tecnologías)
+3. [Instalación y ejecución](#3-instalación-y-ejecución)
+4. [Diseño y estructura del proyecto](#4-diseño-y-estructura-del-proyecto-ie211--ie213)
+5. [Componentes, propiedades y estados](#5-componentes-propiedades-y-estados-ie212--ie214)
+6. [Diseño responsivo con Bootstrap](#6-diseño-responsivo-con-bootstrap)
+7. [Pruebas unitarias](#7-pruebas-unitarias-ie221--ie222)
+8. [Proceso de testeo](#8-proceso-de-testeo-ie231--ie232)
+9. [Reglas de negocio](#9-reglas-de-negocio)
+10. [Correspondencia con la rúbrica](#10-correspondencia-con-la-rúbrica)
+
+---
+
+## 1. Descripción del proyecto
+
+**eSports Arena Manager** permite:
+
+| Funcionalidad | Página | Ruta |
 |---|---|---|
-| Node.js + npm | 20 o superior | Entorno y gestor de paquetes |
-| Vite | ^8.3.0 | Servidor de desarrollo y build |
-| React / React DOM | ^19.2.8 | Interfaz de usuario |
-| react-router-dom | ^7.18.4 | Navegación entre páginas (`BrowserRouter`) |
-| Bootstrap | ^5.3.8 | Estilos y diseño responsive |
-| react-bootstrap | ^2.10.10 | Componentes de Bootstrap para React |
-| Karma | ^6.4.4 | Ejecuta las pruebas en el navegador |
-| Jasmine (`jasmine-core`, `karma-jasmine`) | ^4.6.1 / ^5.1.0 | Framework de pruebas |
-| karma-esbuild | ^2.3.0 | Compila JSX e imports para Karma |
-| karma-chrome-launcher | ^3.2.0 | Abre Chrome para las pruebas |
-| Oxlint | ^1.81.0 | Revisión de código (lint) |
+| Ver torneos destacados, próximos cierres y video de la última final | Inicio | `/` |
+| Listar todos los torneos | Torneos | `/torneos` |
+| Ver detalle de un torneo (participantes, calendario, posiciones, premios) | Detalle | `/torneo/:id` |
+| Inscribir un equipo a un torneo con validaciones | Inscripción | `/inscripcion` |
+| Crear un equipo con integrantes y roles | Mi equipo | `/equipo` |
+| Ver y editar datos del jugador (estadísticas, equipos, sanciones) | Mi perfil | `/perfil` |
 
----
+Los datos son simulados (archivo `src/data/datos.js`) y se mantienen en memoria mediante Context API; no hay backend.
 
-## Requisitos previos
+## 2. Tecnologías
 
-- **Node.js 20 o superior** y npm.
-- **Google Chrome** instalado (lo necesita Karma para correr las pruebas).
+| Herramienta | Uso |
+|---|---|
+| React 19 | Librería de componentes |
+| Vite 8 | Bundler y servidor de desarrollo |
+| React Router DOM 7 | Navegación entre páginas (SPA) |
+| Bootstrap 5 + React Bootstrap | Estilos y diseño responsivo |
+| Jasmine 4 | Framework de pruebas (`describe`, `it`, `expect`) |
+| Karma 6 + karma-chrome-launcher | Ejecutor de pruebas en Chrome |
+| karma-esbuild | Transpila JSX/ES modules para Karma |
+| Oxlint | Análisis estático (lint) |
 
----
+## 3. Instalación y ejecución
 
-## Instalación y uso
+**Requisitos:** Node.js 18 o superior y Google Chrome (lo usa Karma).
 
 ```bash
 # 1. Instalar dependencias
 npm install
 
-# 2. Levantar el servidor de desarrollo
-npm run dev
+# 2. Levantar en modo desarrollo
+npm run dev          # http://localhost:5173
+
+# 3. Compilar para producción
+npm run build
+npm run preview
+
+# 4. Ejecutar pruebas unitarias
+npm test             # una sola vez (ChromeHeadless)
+npm run test:watch   # queda escuchando cambios
+
+# 5. Lint
+npm run lint
 ```
 
-Abre `http://localhost:5173` en el navegador.
+## 4. Diseño y estructura del proyecto (IE2.1.1 / IE2.1.3)
 
-### Scripts disponibles
-
-| Comando | Qué hace |
-|---|---|
-| `npm run dev` | Servidor de desarrollo con recarga automática |
-| `npm run build` | Genera la versión de producción en `dist/` |
-| `npm run preview` | Sirve la carpeta `dist/` para probar el build |
-| `npm run lint` | Revisa el código con Oxlint |
-| `npm test` | Corre las pruebas una vez (Karma + Jasmine, ChromeHeadless) |
-| `npm run test:watch` | Corre las pruebas y se repite al guardar cambios |
-| `npm run repaso` | Ejecuta `repaso-js/repaso.js` (requiere que esa carpeta exista) |
-
-> **Importante:** en `package.json` los scripts de prueba deben indicar el archivo de configuración, porque Karma 6.4.4 no detecta solo los archivos `.cjs`:
->
-> ```json
-> "test": "karma start karma.conf.cjs",
-> "test:watch": "karma start karma.conf.cjs --no-single-run --auto-watch"
-> ```
->
-> Sin eso, `npm test` arranca sin configuración (puerto 9876, sin navegador) y se queda pegado.
-
-Si Karma no encuentra Chrome, define la ruta del ejecutable (ejemplo en PowerShell):
-
-```powershell
-$env:CHROME_BIN = "C:\Program Files\Google\Chrome\Application\chrome.exe"
-npm test
-```
-
----
-
-## Rutas de la aplicación
-
-| Ruta | Página | Descripción |
-|---|---|---|
-| `/` | Inicio | Torneos destacados, próximos cierres de inscripción y video |
-| `/torneos` | Torneos | Listado con filtros por juego, estado, nombre y rango de fechas |
-| `/torneo` y `/torneo/:id` | Detalle de torneo | Participantes, calendario, tabla de posiciones y premios |
-| `/inscripcion` | Inscripción | Inscribir un equipo en un torneo con validaciones |
-| `/equipo` | Mi equipo | Crear un equipo y agregar integrantes |
-| `/perfil` | Mi perfil | Datos del jugador, estadísticas, sanciones y edición de datos |
-| cualquier otra | — | Redirige a `/` |
-
-Si `/torneo` se abre sin `id`, se muestra el primer torneo.
-
----
-
-## Estructura del proyecto
+El proyecto se diseñó como **SPA (Single Page Application)** con React. Se separan las responsabilidades en carpetas: páginas, componentes reutilizables, estado global, utilidades puras (lógica testeable) y datos.
 
 ```
 Esports-Arena-ManagerEv2-React/
-├── index.html                 # Punto de entrada HTML (div#root)
+├── index.html
+├── vite.config.js            # Configuración de Vite + plugin React
+├── karma.conf.cjs            # Configuración de Karma + Jasmine + esbuild
 ├── package.json
-├── vite.config.js
-├── karma.conf.cjs             # Configuración de Karma (.cjs porque el proyecto es "type": "module")
-├── .oxlintrc.json
-├── public/
-│   └── favicon.svg
 └── src/
-    ├── main.jsx               # BrowserRouter + DatosProvider + CSS de Bootstrap
-    ├── App.jsx                # Definición de rutas
-    ├── data/
-    │   └── datos.js           # Datos simulados: juegos, jugadores, equipos, torneos
-    ├── context/
-    │   ├── DatosContext.js    # Contexto + hook useDatos()
-    │   └── DatosProvider.jsx  # Estado compartido y acciones
-    ├── components/
-    │   ├── Layout.jsx         # Navbar, contenido (Outlet) y footer
-    │   ├── TarjetaTorneo.jsx  # Tarjeta de un torneo
-    │   └── BadgeEstado.jsx    # Etiqueta de color según el estado
-    ├── pages/
+    ├── main.jsx              # Punto de entrada: BrowserRouter + DatosProvider + Bootstrap
+    ├── App.jsx               # Definición de rutas
+    ├── components/           # Componentes reutilizables
+    │   ├── Layout.jsx        #   Navbar + <Outlet/> + footer
+    │   ├── TarjetaTorneo.jsx #   Card de un torneo
+    │   └── BadgeEstado.jsx   #   Badge de color según estado
+    ├── pages/                # Una por ruta
     │   ├── Inicio.jsx
     │   ├── Torneos.jsx
     │   ├── TorneoDetalle.jsx
     │   ├── Inscripcion.jsx
     │   ├── Equipo.jsx
     │   └── Perfil.jsx
+    ├── context/              # Estado global (Context API)
+    │   ├── DatosContext.js   #   createContext + hook useDatos()
+    │   └── DatosProvider.jsx #   Provider con useState y acciones
     ├── hooks/
-    │   └── useTitulo.js       # Cambia el título de la pestaña por página
-    └── utils/
-        ├── formato.js         # Formateo de estados, fechas y posiciones
-        ├── formato.spec.js    # Pruebas de formato
-        ├── validaciones.js    # Validaciones puras de inscripción, equipo y perfil
-        └── validaciones.spec.js
+    │   └── useTitulo.js      # Hook propio: cambia document.title
+    ├── utils/                # Lógica pura, sin React (fácil de testear)
+    │   ├── validaciones.js   #   validarInscripcion / validarEquipo / validarPerfil
+    │   ├── validaciones.spec.js
+    │   ├── formato.js        #   formatearEstado, colorEstado, etiquetaPosicion, fechaHoy
+    │   └── formato.spec.js
+    ├── data/
+    │   └── datos.js          # Datos simulados: juegos, jugadores, equipos, torneos
+    └── style/                # Hojas de estilo
 ```
 
----
+### Arquitectura en capas
 
-## Cómo funciona
-
-### Estado compartido
-
-`DatosProvider` guarda `jugadores`, `equipos` y `torneos` con `useState` y los entrega a toda la aplicación mediante el contexto. Cualquier componente los usa con:
-
-```jsx
-const { torneos, equipos, inscribirEquipo } = useDatos();
+```
+main.jsx
+  └─ BrowserRouter            (rutas)
+      └─ DatosProvider        (estado global: jugadores, equipos, torneos)
+          └─ App → Layout → <Outlet/> → Página
+                                          ├─ usa useDatos()   (leer/modificar estado)
+                                          ├─ usa useTitulo()  (título de la pestaña)
+                                          └─ usa utils/*      (validar y formatear)
 ```
 
-Acciones disponibles:
+### Decisiones de diseño
 
-- `inscribirEquipo(torneoId, equipoId)`: agrega el equipo al torneo y suma un cupo ocupado.
-- `crearEquipo({ nombre, juegoId, capitanId, integrantes })`: crea el equipo, agrega al capitán si falta y lo registra en cada jugador.
-- `actualizarJugador(id, cambios)`: actualiza apodo y correo del jugador.
-- `nombreJuego(id)` y `nombreParticipante(id)`: devuelven el nombre para mostrar.
+- **Lógica fuera de los componentes:** las validaciones y formatos están en `utils/` como funciones puras. Así se testean sin renderizar React.
+- **Estado compartido con Context API:** evita pasar props por muchos niveles; `DatosProvider` expone los datos y las acciones (`inscribirEquipo`, `crearEquipo`, `actualizarJugador`).
+- **Componentes reutilizables:** `TarjetaTorneo` y `BadgeEstado` se usan en varias páginas.
+- **Hook personalizado:** `useTitulo` encapsula un `useEffect` reutilizable.
+- **Accesibilidad:** secciones con `aria-labelledby`, `controlId` en cada campo de formulario y mensajes de error asociados.
 
-Los datos se reinician al recargar la página (no hay persistencia).
+## 5. Componentes, propiedades y estados (IE2.1.2 / IE2.1.4)
 
-### Validaciones (`src/utils/validaciones.js`)
+### Propiedades (props)
 
-Son funciones puras: reciben datos y devuelven mensajes de error, sin tocar el DOM. Por eso se pueden probar con Jasmine.
+| Componente | Props | Descripción |
+|---|---|---|
+| `TarjetaTorneo` | `torneo` | Objeto torneo a mostrar; incluye botón a `/torneo/:id` |
+| `BadgeEstado` | `estado`, `className` | Muestra el estado con color (`abierto` verde, `en_curso` amarillo, `finalizado` gris) |
+| `DatosProvider` | `children` | Envuelve la app y entrega el contexto |
 
-**Inscripción** — se rechaza si:
-- No se eligió torneo o equipo.
-- El torneo no está abierto, ya pasó la fecha de cierre, no tiene cupos o es individual.
-- El equipo ya está inscrito, juega otro juego, no llega al mínimo de integrantes del juego, está inactivo o su capitán tiene una sanción vigente.
+### Estados locales (`useState`)
 
-**Equipo** — el nombre es obligatorio y no puede repetirse (sin importar mayúsculas); el capitán es obligatorio.
+| Página | Estados | Para qué sirven |
+|---|---|---|
+| `Inscripcion` | `torneoId`, `equipoId`, `tocado`, `confirmacion` | Selección del formulario, mostrar errores solo tras interactuar, mensaje de éxito |
+| `Equipo` | `form`, `nuevo`, `integrantes`, `errores`, `confirmacion` | Datos del equipo, integrante en edición, lista de integrantes agregados |
+| `Perfil` | `form`, `errores`, `confirmacion` | Formulario de edición con validación |
 
-**Perfil** — apodo de 3 a 15 caracteres sin espacios, correo con formato válido, edad entera entre 13 y 99, contraseña de al menos 8 caracteres y confirmación igual.
+### Estado global (Context API)
 
-### Diseño
+`DatosProvider` mantiene `jugadores`, `equipos` y `torneos` con `useState` y entrega:
 
-Todo el diseño usa Bootstrap y react-bootstrap (`Navbar`, `Card`, `Form`, `Table`, `Alert`, `Badge`, `ListGroup`, `Row/Col`). El menú se colapsa en pantallas pequeñas.
+| Función | Efecto |
+|---|---|
+| `inscribirEquipo(torneoId, equipoId)` | Suma un cupo y agrega el equipo a `participantes` |
+| `crearEquipo({...})` | Crea el equipo y lo asocia a sus jugadores |
+| `actualizarJugador(id, cambios)` | Actualiza apodo/correo del jugador |
+| `nombreJuego(id)` / `nombreParticipante(id)` | Helpers para mostrar nombres |
 
-Los archivos de `src/style/` (si existen en tu copia) son restos de la plantilla de Vite y de la EP1: ningún archivo los importa, así que se pueden borrar.
+### Efectos y hooks
 
----
+- `useEffect` (dentro de `useTitulo`) actualiza el título del documento cuando cambia el texto.
+- `useParams` lee el `:id` del torneo en `TorneoDetalle`.
+- `useLocation` marca el enlace activo del menú en `Layout`.
 
-## Pruebas
+### Formularios controlados
 
-Las pruebas están en `src/utils/*.spec.js` y se ejecutan con:
+Los campos están ligados al estado (`value` + `onChange`) y muestran errores con `isInvalid` y `Form.Control.Feedback` de React Bootstrap.
+
+## 6. Diseño responsivo con Bootstrap
+
+- **Navbar** con `expand="lg"`: se colapsa en un menú hamburguesa en pantallas pequeñas.
+- **Grilla** (`Row` / `Col`) con breakpoints: las tarjetas de torneos pasan de 1 columna (móvil) a 2 (`md`) y 3 (`lg`) con `Row xs={1} md={2} lg={3}`.
+- **Tablas** con `responsive` para scroll horizontal en móvil.
+- **Video** embebido con `ratio ratio-16x9`.
+- **Layout** con `min-vh-100` y `flex-grow-1` para dejar el footer siempre abajo.
+- Componentes Bootstrap usados: `Navbar`, `Card`, `Badge`, `Button`, `Form`, `Alert`, `ListGroup`, `Table`, `Container`.
+
+## 7. Pruebas
+
+Las pruebas están en `src/utils/*.spec.js` y se ejecutan con Karma y Datos.js:
 
 ```bash
 npm test
@@ -194,58 +202,107 @@ Qué cubren:
 
 > Las pruebas usan el torneo `t1` de `datos.js`. Para que pasen, su `fechaCierreInscripcion` debe ser posterior a `2026-10-13` (por ejemplo `2026-11-20`).
 
-### Lista de revisión manual
 
-Con `npm run dev` y la consola del navegador abierta (F12), sin errores en rojo:
+### `src/utils/formato.spec.js` (4 pruebas)
 
-- **Menú:** cada enlace marca la sección activa; "Detalle de torneo" lleva a `/torneo/t1`.
-- **Inicio:** se ven las tarjetas de torneos abiertos y en curso, la lista de cierres y el video.
-- **Torneos:** los filtros funcionan; fechas invertidas muestran alerta; sin resultados muestra el aviso.
-- **Detalle:** en `t1` se ve la fila del podio resaltada; en `t2` aparecen los mensajes de "aún no hay…".
-- **Inscripción:** probar torneo cerrado, equipo ya inscrito, juego distinto, equipo inactivo y capitán sancionado.
-- **Equipo:** guardar vacío, nombre repetido, agregar y quitar integrantes, guardar bien.
-- **Perfil:** datos inválidos muestran errores por campo; datos correctos muestran el mensaje verde.
-- **Persistencia entre páginas:** un equipo creado aparece luego en el selector de inscripción.
+| # | Prueba | Verifica |
+|---|---|---|
+| 1 | `formatearEstado` reemplaza el guion bajo | `"en_curso"` → `"en curso"` |
+| 2 | `colorEstado` devuelve variante de Bootstrap | Los 3 estados y un valor desconocido |
+| 3 | `etiquetaPosicion` usa medallas | Podio con medalla, resto con número |
+| 4 | `fechaHoy` devuelve `AAAA-MM-DD` | Formato mediante expresión regular |
 
----
+### `src/utils/validaciones.spec.js` (12 pruebas)
 
-## Migración desde la EP1 (HTML) a React
+| # | Grupo | Prueba | Verifica |
+|---|---|---|---|
+| 5 | `validarInscripcion` | Exige torneo y equipo | Mensajes de selección obligatoria |
+| 6 | `validarInscripcion` | Torneo no abierto | Rechaza `en_curso` / `finalizado` |
+| 7 | `validarInscripcion` | Torneo individual | No admite equipos |
+| 8 | `validarInscripcion` | Fuera de plazo | Rechaza si `hoy` > fecha de cierre |
+| 9 | `validarInscripcion` | Equipo ya inscrito / pocos integrantes | Duplicados y mínimo de integrantes |
+| 10 | `validarInscripcion` | Otro juego, inactivo y capitán sancionado | Múltiples errores simultáneos |
+| 11 | `validarInscripcion` | Inscripción válida | `ok === true` |
+| 12 | `validarEquipo` | Exige nombre y capitán | Campos obligatorios |
+| 13 | `validarEquipo` | Nombre repetido (sin distinguir mayúsculas) | Unicidad |
+| 14 | `validarEquipo` | Datos válidos | `ok === true` |
+| 15 | `validarPerfil` | Datos válidos | `ok === true` |
+| 16 | `validarPerfil` | Apodo, correo, edad y contraseñas | Cada regla de validación |
 
-| EP1 (HTML + JS) | EP2 (React) |
-|---|---|
-| `index.html` | `pages/Inicio.jsx` |
-| `torneos.html` | `pages/Torneos.jsx` |
-| `torneo-detalle.html?id=t1` | `pages/TorneoDetalle.jsx` en `/torneo/:id` |
-| `inscripcion.html` | `pages/Inscripcion.jsx` |
-| `equipo.html` | `pages/Equipo.jsx` |
-| `perfil.html` | `pages/Perfil.jsx` |
-| Encabezado y pie repetidos en cada HTML | `components/Layout.jsx` |
-| `js/data.js` (arreglos globales mutables) | `data/datos.js` + `context/DatosProvider.jsx` |
-| `js/app.js` (manipulación del DOM) | Componentes con `useState` y `utils/` |
-| `css/estilos.css` | Bootstrap + react-bootstrap |
+**Total: 16 pruebas** (la rúbrica exige 10 como mínimo).
 
-Mejoras respecto a la EP1:
+### Aporte a la calidad del código
 
-- El estado se mantiene al navegar entre páginas (antes cada página recargaba los datos).
-- Las validaciones están separadas de la interfaz y tienen pruebas automáticas.
-- React escapa el texto, así que se elimina el riesgo de insertar HTML con `innerHTML`.
-- Tras una inscripción exitosa el formulario se limpia.
+- Cubren las **reglas de negocio críticas** (quién puede inscribirse y en qué condiciones).
+- Detectan regresiones al modificar validaciones.
+- Documentan el comportamiento esperado con ejemplos ejecutables.
+- Cubren casos felices y casos de error (borde).
 
----
+## 8. Proceso de testeo (IE2.3.1 / IE2.3.2)
 
-## Solución de problemas
+### Entorno configurado
 
-| Problema | Causa y solución |
-|---|---|
-| `Failed to resolve import "bootstrap/..."` o `react-bootstrap` | Faltan dependencias: `npm install` |
-| `Failed to resolve import "./estilos.css"` | `main.jsx` no debe importar ese archivo; solo `bootstrap/dist/css/bootstrap.min.css` |
-| Página en blanco | Abrir F12 → Console y revisar el error. Un caso típico es `DatosProvider.jsx` sin los tres `useState` |
-| `npm test` queda pegado (puerto 9876, "No captured browser") | Usar `karma start karma.conf.cjs` en los scripts |
-| `No binary for ChromeHeadless` | Instalar Chrome o definir `CHROME_BIN` |
-| La inscripción siempre dice "plazo cerrado" | Las fechas del torneo `t1` en `datos.js` están en el pasado |
+`karma.conf.cjs` (usa `.cjs` porque `package.json` tiene `"type": "module"`):
 
----
+| Opción | Valor | Motivo |
+|---|---|---|
+| `frameworks` | `['jasmine']` | Aporta `describe`, `it`, `expect` y espías |
+| `files` | `src/**/*.spec.js*` como módulos | Carga solo los archivos de prueba |
+| `preprocessors` | `esbuild` | Traduce JSX y resuelve los `import` |
+| `browsers` | `ChromeHeadless` | Corre sin ventana (sirve en servidores/CI) |
+| `singleRun` | `true` | Ejecuta una vez y termina |
+| `reporters` | `progress` | Resultados en la terminal |
 
-## Integrantes
+### Flujo de testeo
 
-_(Completar con los nombres del equipo.)_
+```
+Escribir *.spec.js → npm test → Karma abre ChromeHeadless
+   → esbuild compila los specs → Jasmine ejecuta → reporte (OK / FAILED)
+```
+
+### Conceptos aplicados
+
+| Concepto | Explicación | Dónde se ve |
+|---|---|---|
+| **Prueba unitaria** | Verifica una unidad aislada (una función) | Funciones de `utils/` |
+| **Suite (`describe`)** | Agrupa pruebas relacionadas | `describe("validarEquipo", ...)` |
+| **Spec (`it`)** | Un caso de prueba | Cada `it(...)` |
+| **Matcher** | Comparación del resultado | `toBe`, `toContain`, `toBeTrue`, `toBeFalse`, `toMatch` |
+| **Arrange / Act / Assert** | Preparar datos, ejecutar, verificar | Cada spec |
+| **Función pura** | Mismo input → mismo output, sin efectos | Por eso `utils/` es fácil de testear |
+| **Fixtures** | Datos de entrada reutilizables | `datos.js` importado en los specs |
+| **Casos borde** | Valores límite o inválidos | Edad 12, apodo con espacios, plazo vencido |
+
+### Mocks y espías
+
+Jasmine permite simular dependencias con `spyOn(...)` y `jasmine.createSpy(...)`. En este proyecto la lógica probada es pura y recibe sus datos por parámetro (se pasan objetos simulados desde `datos.js` o creados en la prueba, como `equipoValido`). Para probar funciones con dependencias externas, por ejemplo `fechaHoy`, se puede usar `jasmine.clock().mockDate(new Date(2026, 9, 19))` para fijar la fecha.
+
+### Análisis de resultados y cobertura
+
+- Resultado esperado de `npm test`: `Executed 16 of 16 SUCCESS`.
+- Para medir **cobertura** se puede agregar `karma-coverage` y el reporter `coverage` a `karma.conf.cjs`, y revisar el porcentaje de líneas y ramas de `utils/`.
+
+## 9. Reglas de negocio
+
+### Inscripción a torneo
+
+Un equipo puede inscribirse si se cumple **todo** lo siguiente:
+
+- El torneo está en estado `abierto` y la fecha de hoy no supera `fechaCierreInscripcion`.
+- El torneo tiene cupos disponibles y es de modalidad `Equipos`.
+- El equipo no está ya inscrito, está activo y juega el mismo juego del torneo.
+- El equipo tiene al menos los integrantes mínimos que exige el juego (Valorant: 5, LoL: 5, Rocket League: 3).
+- El capitán del equipo no tiene una sanción vigente.
+
+### Creación de equipo
+
+- Nombre obligatorio y único (sin distinguir mayúsculas).
+- Capitán obligatorio. Si el capitán no está en la lista, se agrega automáticamente.
+- No se puede repetir un jugador en la lista de integrantes.
+
+### Perfil
+
+- Apodo: sin espacios, entre 3 y 15 caracteres.
+- Correo con formato válido.
+- Edad: entero entre 13 y 99.
+- Contraseña de mínimo 8 caracteres y confirmación idéntica.
