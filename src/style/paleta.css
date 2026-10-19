@@ -1,0 +1,71 @@
+/* =========================================================
+   Paleta de colores Arena Púrpura
+   Se define una vez y se "traduce" a las variables de Bootstrap 5.3.
+   Debe cargarse DESPUÉS de bootstrap.min.css (ver main.jsx).
+   ========================================================= */
+:root,
+[data-bs-theme="dark"] {
+  /* ---- Paleta base ---- */
+  --arena-fondo: #0E0B16;
+  --arena-superficie: #1C1430;
+  --arena-primario: #9146FF;
+  --arena-primario-claro: #C4A3FF; /* tono claro del primario: texto pequeño (9.3:1 sobre el fondo) */
+  --arena-acento: #00F5D4;
+  --arena-texto: #F1ECFF;
+  --arena-error: #FF5C7A;
+  --arena-texto-boton: #FFFFFF;
+  --arena-secundario: #4A3F6B;
+  --arena-radio: 8px;
+
+  /* ---- Bootstrap: texto, fondo y bordes ---- */
+  --bs-body-font-family: 'Segoe UI', Arial, sans-serif;
+  --bs-body-bg: #0E0B16;
+  --bs-body-bg-rgb: 14, 11, 22;
+  --bs-body-color: #F1ECFF;
+  --bs-body-color-rgb: 241, 236, 255;
+  --bs-emphasis-color: #F1ECFF;
+  --bs-emphasis-color-rgb: 241, 236, 255;
+  --bs-secondary-bg: #1C1430;
+  --bs-secondary-bg-rgb: 28, 20, 48;
+  --bs-tertiary-bg: #1C1430;
+  --bs-tertiary-bg-rgb: 28, 20, 48;
+  --bs-border-color: rgba(241, 236, 255, 0.2);
+  --bs-border-color-translucent: rgba(241, 236, 255, 0.2);
+  --bs-heading-color: #9146FF; /* títulos grandes: solo exigen 3:1 */
+  --bs-link-color: #C4A3FF;
+  --bs-link-color-rgb: 196, 163, 255;
+  --bs-link-hover-color: #E0D0FF;
+  --bs-link-hover-color-rgb: 224, 208, 255;
+
+  /* ---- Bootstrap: colores de tema ---- */
+  --bs-primary: #9146FF;
+  --bs-primary-rgb: 145, 70, 255;
+  --bs-secondary: #4A3F6B;
+  --bs-secondary-rgb: 74, 63, 107;
+  --bs-success: #00F5D4;          /* turquesa = "resultado validado" / abierto */
+  --bs-success-rgb: 0, 245, 212;
+  --bs-danger: #FF5C7A;
+  --bs-danger-rgb: 255, 92, 122;
+  --bs-info: #9146FF;             /* los avisos informativos usan el primario */
+  --bs-info-rgb: 145, 70, 255;
+
+  /* ---- Bootstrap: variantes suaves (alertas) ---- */
+  --bs-primary-text-emphasis: #C4A3FF;
+  --bs-primary-bg-subtle: #281745;
+  --bs-primary-border-subtle: #422373;
+  --bs-info-text-emphasis: #C4A3FF;
+  --bs-info-bg-subtle: #281745;
+  --bs-info-border-subtle: #422373;
+  --bs-success-text-emphasis: #00F5D4;
+  --bs-success-bg-subtle: #0C272D;
+  --bs-success-border-subtle: #0A514F;
+  --bs-danger-text-emphasis: #FF5C7A;
+  --bs-danger-bg-subtle: #2B1522;
+  --bs-danger-border-subtle: #562334;
+
+  /* ---- Bootstrap: validación de formularios ---- */
+  --bs-form-valid-color: #00F5D4;
+  --bs-form-valid-border-color: #00F5D4;
+  --bs-form-invalid-color: #FF5C7A;
+  --bs-form-invalid-border-color: #FF5C7A;
+}

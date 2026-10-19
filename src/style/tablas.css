@@ -1,0 +1,34 @@
+/* =========================================================
+   TABLAS
+   ========================================================= */
+.table {
+  --bs-table-bg: var(--arena-superficie);
+  --bs-table-color: var(--arena-texto);
+  --bs-table-border-color: rgba(241, 236, 255, 0.2);
+  --bs-table-striped-bg: rgba(145, 70, 255, 0.08);
+  --bs-table-striped-color: var(--arena-texto);
+  --bs-table-hover-bg: rgba(145, 70, 255, 0.15);
+  --bs-table-hover-color: var(--arena-texto);
+}
+
+.table > thead th {
+  color: var(--arena-primario-claro);
+}
+
+/* Podio: el color es refuerzo visual, el texto/ícono es el indicador real
+   (ver etiquetaPosicion(): 🥇 1° lugar, 🥈 2° lugar, 🥉 3° lugar) */
+.fila-podio > td:first-child {
+  font-weight: 700;
+}
+
+.fila-oro > td:first-child {
+  border-left: 4px solid var(--arena-primario);
+}
+
+.fila-plata > td:first-child {
+  border-left: 4px solid color-mix(in srgb, var(--arena-texto) 60%, transparent);
+}
+
+.fila-bronce > td:first-child {
+  border-left: 4px solid var(--arena-error);
+}
