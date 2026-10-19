@@ -1,5 +1,5 @@
 import { validarInscripcion, validarEquipo, validarPerfil } from './validaciones';
-import { juegos, jugadores, equipos, torneos } from '../mocks/mockData';
+import { juegos, jugadores, equipos, torneos } from '../data/datos.js';
 
 describe('validarInscripcion', () => {
     const hoy = '2026-10-13';
