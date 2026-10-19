@@ -19,4 +19,27 @@ import {
         setTorneo((prev) =>
         prev.map((t) => 
             t.id === torneoId ? { ...t, cupoOcupado: t.cupoOcupado + 1, participantes: [...t.participantes, equipoId] }: t)); 
+
+    const crearEquipo = ({ nombre, juegoId, capitanId, integrantes }) => {
+        const id = "e" + (equipos.length + 1);
+        
+        const lista = integrantes.some((i) => i.jugadorId === capitanId)
+          ? integrantes
+          : [{ jugadorId: capitanId, rol: "Capitan" }, ...integrantes];
+
+        setEquipos((prev) => [...prev, { id, nombre, juegoId, capitanId, activo: true, integrantes: lista }]);
+        setJugadores((prev) => prev.map((j) => lista.some((i) => i.jugadorId === j.id) && !j.equipos.include(id) ? 
+        { ...j, equipos: [...j.equipos, id] }: j));
+    };
+
+    const actualizarJugador = (id, cambios) =>
+        setJugadores((prev) => prev.map((j) => (j.id === id ? { ...j, ...cambios } : j)));
+
+    const valor = {
+        juegos, jugadores, equipos, torneos,
+        nombreJuego, nombreParticipante,
+        inscribirEquipo, crearEquipo, actualizarJugador,
+    };
+
+    return <DatosContext.Provider value={valor}>{children}</DatosContext.Provider>;
 }

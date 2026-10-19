@@ -1,7 +1,7 @@
-import {useEffect} from 'react';
+import {useEffect} from "react";
 
 export function useTitulo(texto) {
     useEffect(() => {
-        document.title = 'eSport Arena Manager -  + ${texto} ';
+        document.title = `eSports Arena Manager - ${texto}`;
     }, [texto]);
 }
