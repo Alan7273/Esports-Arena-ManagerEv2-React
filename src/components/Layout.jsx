@@ -7,7 +7,7 @@ const ENLACES = [
     { seccion: "torneo", to: "/torneo/t1", texto: "Inicio" },
     { seccion: "inscripcion", to: "/inscripcion", texto: "Inscripcion" },
     { seccion: "equipo", to: "/equipo", texto: "Mi equipo" },
-    { seccion: "perfil", to:"/", texto: "Mi perfil" },
+    { seccion: "perfil", to:"/perfil", texto: "Mi perfil" },
 ];
 
 export default function Layout() {

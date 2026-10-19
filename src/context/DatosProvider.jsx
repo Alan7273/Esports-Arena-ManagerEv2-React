@@ -8,6 +8,11 @@ import {
  } from "../data/datos";
 
  export default function DatosProvider({ children }) {
+    const [jugadores, setJugadores] = useState(jugadoresIniciales);
+    const [equipos, setEquipos] = useState(equiposIniciales);
+    const [torneos, setTorneos] = useState(torneosIniciales);
+
+
     const nombreJuego = (id) => juegos.find((j) => j.id === id)?.nombre ?? "-";
 
     const nombreParticipante = (id) => 
@@ -16,7 +21,7 @@ import {
     id;
     
     const inscribirEquipo = (torneoId, equipoId) =>
-        setTorneo((prev) =>
+        setTorneos((prev) =>
         prev.map((t) => 
             t.id === torneoId ? { ...t, cupoOcupado: t.cupoOcupado + 1, participantes: [...t.participantes, equipoId] }: t)); 
 
@@ -28,7 +33,7 @@ import {
           : [{ jugadorId: capitanId, rol: "Capitan" }, ...integrantes];
 
         setEquipos((prev) => [...prev, { id, nombre, juegoId, capitanId, activo: true, integrantes: lista }]);
-        setJugadores((prev) => prev.map((j) => lista.some((i) => i.jugadorId === j.id) && !j.equipos.include(id) ? 
+        setJugadores((prev) => prev.map((j) => lista.some((i) => i.jugadorId === j.id) && !j.equipos.includes(id) ? 
         { ...j, equipos: [...j.equipos, id] }: j));
     };
 

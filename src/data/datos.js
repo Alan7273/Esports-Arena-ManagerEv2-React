@@ -1,5 +1,5 @@
 export const juegos = [
-    {id: "g1", nombre: "valorant", minIntegrantes: 5},
+    {id: "g1", nombre: "Valorant", minIntegrantes: 5},
     {id: "g2", nombre: "League of Legends", minIntegrantes: 5},
     {id: "g3", nombre: "Rocket League", minIntegrantes: 3}
 ];
@@ -21,7 +21,7 @@ export const equipos = [
             { jugadorId: "j1", rol: "Capitán" },
             { jugadorId: "j2", rol: "Duelista" }
         ] },
-    { id: "e2", nombre: "Team Fenix", juegoId: "g3", capitanId: "j3", activo: false,
+    { id: ["e2"], nombre: "Team Fenix", juegoId: "g3", capitanId: "j3", activo: false,
         integrantes: [{ jugadorId: "j3", rol: "Capitán" }] }
 ];
 
@@ -29,7 +29,7 @@ export const torneos = [
     {
         id: "t1", nombre: "Copa Apertura Valorant", juegoId: "g1", estado: "abierto",
         modalidad: "Equipos", cupoOcupado: 6, cupoMax: 16,
-        fechaCierreInscripcion: "2026-09-20", fechaInicio: "2026-09-25",
+        fechaCierreInscripcion: "2026-11-20", fechaInicio: "2026-11-25",
         participantes: ["e1"],
         partidas: [
             { id: "p1", ronda: 1, equipos: ["e1", "e2"], fecha: "2026-09-25 18:00", estado: "programada", resultado: null }
