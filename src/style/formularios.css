@@ -1,0 +1,52 @@
+/* =========================================================
+   FILTROS / FORMULARIOS
+   ========================================================= */
+main form {
+  background: var(--arena-superficie);
+  padding: 1.5rem;
+  border-radius: var(--arena-radio);
+}
+
+.form-label {
+  font-size: 0.9rem;
+  color: var(--arena-texto);
+  opacity: 0.85;
+}
+
+.form-control,
+.form-select {
+  background-color: var(--arena-fondo);
+  color: var(--arena-texto);
+  border-color: rgba(241, 236, 255, 0.4); /* borde de campo ≥ 3:1 */
+  border-radius: var(--arena-radio);
+}
+
+.form-control::placeholder {
+  color: rgba(241, 236, 255, 0.55);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--arena-fondo);
+  color: var(--arena-texto);
+  border-color: var(--arena-primario);
+  box-shadow: 0 0 0 0.2rem rgba(145, 70, 255, 0.4);
+}
+
+/* Error: el color no es el único indicador, se agrega el icono ⚠ */
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: var(--arena-error);
+}
+
+.invalid-feedback {
+  font-size: 0.8rem;
+}
+
+.invalid-feedback:not(:empty)::before {
+  content: "⚠ ";
+}
+
+fieldset legend {
+  color: var(--arena-primario-claro);
+}

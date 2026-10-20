@@ -1,0 +1,100 @@
+/* =========================================================
+   TARJETAS, ETIQUETAS, BOTONES, ALERTAS, LISTAS
+   ========================================================= */
+
+/* ---- Tarjetas ---- */
+.card {
+  --bs-card-bg: var(--arena-superficie);
+  --bs-card-color: var(--arena-texto);
+  --bs-card-title-color: var(--arena-texto);
+  --bs-card-border-color: rgba(241, 236, 255, 0.2);
+  --bs-card-border-radius: var(--arena-radio);
+  --bs-card-cap-bg: rgba(145, 70, 255, 0.15);
+  --bs-card-cap-color: var(--arena-primario-claro);
+}
+
+.card-header {
+  font-weight: 700;
+}
+
+/* ---- Etiquetas de estado: el color nunca es el único indicador (icono + texto) ---- */
+.badge {
+  --bs-badge-border-radius: 999px;
+  --bs-badge-font-weight: 600;
+}
+
+.badge.bg-success { --bs-badge-color: var(--arena-fondo); }       /* turquesa: texto oscuro (13.9:1) */
+.badge.bg-primary { --bs-badge-color: var(--arena-texto-boton); } /* blanco sobre primario (4.6:1) */
+.badge.bg-secondary { --bs-badge-color: var(--arena-texto); }
+.badge.bg-danger { --bs-badge-color: var(--arena-fondo); }
+
+.badge.estado-abierto::before { content: "● "; }
+.badge.estado-en_curso::before { content: "▶ "; }
+.badge.estado-finalizado::before { content: "■ "; }
+
+/* ---- Botones ----
+   Blanco sobre #9146FF = 4.6:1 (límite): la fuente no baja de 16px */
+.btn {
+  --bs-btn-border-radius: var(--arena-radio);
+  --bs-btn-font-size: 16px;
+}
+
+.btn-primary {
+  --bs-btn-color: var(--arena-texto-boton);
+  --bs-btn-bg: var(--arena-primario);
+  --bs-btn-border-color: var(--arena-primario);
+  --bs-btn-hover-color: var(--arena-fondo);
+  --bs-btn-hover-bg: var(--arena-acento);
+  --bs-btn-hover-border-color: var(--arena-acento);
+  --bs-btn-focus-shadow-rgb: 145, 70, 255;
+  --bs-btn-active-color: var(--arena-fondo);
+  --bs-btn-active-bg: var(--arena-acento);
+  --bs-btn-active-border-color: var(--arena-acento);
+  --bs-btn-disabled-color: var(--arena-texto-boton);
+  --bs-btn-disabled-bg: var(--arena-primario);
+  --bs-btn-disabled-border-color: var(--arena-primario);
+  font-weight: 700;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--arena-primario-claro);
+  --bs-btn-border-color: var(--arena-primario);
+  --bs-btn-hover-color: var(--arena-texto-boton);
+  --bs-btn-hover-bg: var(--arena-primario);
+  --bs-btn-hover-border-color: var(--arena-primario);
+  --bs-btn-focus-shadow-rgb: 145, 70, 255;
+  --bs-btn-active-color: var(--arena-texto-boton);
+  --bs-btn-active-bg: var(--arena-primario);
+  --bs-btn-active-border-color: var(--arena-primario);
+}
+
+.btn-outline-danger {
+  --bs-btn-color: var(--arena-error);
+  --bs-btn-border-color: var(--arena-error);
+  --bs-btn-hover-color: var(--arena-fondo);
+  --bs-btn-hover-bg: var(--arena-error);
+  --bs-btn-hover-border-color: var(--arena-error);
+  --bs-btn-focus-shadow-rgb: 255, 92, 122;
+  --bs-btn-active-color: var(--arena-fondo);
+  --bs-btn-active-bg: var(--arena-error);
+  --bs-btn-active-border-color: var(--arena-error);
+}
+
+/* ---- Alertas (los colores salen de paleta.css) ---- */
+.alert {
+  --bs-alert-border-radius: var(--arena-radio);
+}
+
+/* ---- Listas ---- */
+.list-group {
+  --bs-list-group-bg: var(--arena-superficie);
+  --bs-list-group-color: var(--arena-texto);
+  --bs-list-group-border-color: rgba(241, 236, 255, 0.2);
+  --bs-list-group-border-radius: var(--arena-radio);
+}
+
+/* ---- Video ---- */
+video {
+  width: 100%;
+  border-radius: var(--arena-radio);
+}
