@@ -1,0 +1,47 @@
+/* =========================================================
+   HEADER / NAV / FOOTER
+   ========================================================= */
+.navbar.navbar-arena {
+  --bs-navbar-color: var(--arena-texto);
+  --bs-navbar-hover-color: var(--arena-texto);
+  --bs-navbar-active-color: var(--arena-texto-boton);
+  --bs-navbar-brand-color: var(--arena-primario); /* título grande: cumple 3:1 */
+  --bs-navbar-brand-hover-color: var(--arena-primario-claro);
+  --bs-navbar-brand-active-color: var(--arena-primario-claro);
+  background: var(--arena-superficie);
+  border-bottom: 2px solid var(--arena-primario);
+}
+
+.navbar-arena .navbar-brand {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.navbar-arena .navbar-nav {
+  gap: 0.4rem;
+}
+
+.navbar-arena .nav-link {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid transparent;
+  border-radius: var(--arena-radio);
+}
+
+.navbar-arena .nav-link:hover {
+  border-color: var(--arena-primario);
+}
+
+/* Página actual: el color es refuerzo, el indicador real es aria-current/active */
+.navbar-arena .nav-link.active {
+  background: var(--arena-primario);
+  color: var(--arena-texto-boton);
+}
+
+.footer-arena {
+  background: var(--arena-superficie);
+  color: var(--arena-texto);
+  text-align: center;
+  padding: 1.2rem;
+  margin-top: 3rem;
+  opacity: 0.85;
+}
