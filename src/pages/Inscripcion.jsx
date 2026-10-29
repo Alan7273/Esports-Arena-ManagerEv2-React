@@ -37,7 +37,7 @@ export default function Inscripcion() {
 
   return (
     <section style={{ maxWidth: 600 }}>
-      <h1 className="mb-4">Inscripción a torneo</h1>
+      <h2 className="mb-4">Inscripción a torneo</h2>
       <Form onSubmit={enviar} noValidate>
         <Form.Group className="mb-3" controlId="insc-tipo">
           <Form.Label>Tipo de participante</Form.Label>

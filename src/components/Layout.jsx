@@ -18,7 +18,7 @@ export default function Layout() {
   <div className="d-flex flex-column min-vh-100">
       <Navbar bg="dark" data-bs-theme="dark" expand="lg" className="mb-4">
         <Container>
-          <Navbar.Brand as={Link} to="/">eSports Arena Manager</Navbar.Brand>
+          <Navbar.Brand as={Link} to="/"><h1>eSports Arena Manager</h1></Navbar.Brand>
           <Navbar.Toggle aria-controls="menu-principal" />
           <Navbar.Collapse id="menu-principal">
             <Nav className="ms-auto">

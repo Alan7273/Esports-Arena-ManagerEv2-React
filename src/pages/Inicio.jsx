@@ -15,14 +15,14 @@ export default function Inicio() {
   return (
     <>
       <section aria-labelledby="titulo-destacados" className="mb-5">
-        <h1 id="titulo-destacados" className="mb-4">Torneos destacados</h1>
+        <h2 id="titulo-destacados" className="mb-4">Torneos destacados</h2>
         <Row xs={1} md={2} lg={3} className="g-4">
           {destacados.map((t) => <TarjetaTorneo key={t.id} torneo={t} />)}
         </Row>
       </section>
 
       <section aria-labelledby="titulo-cierres" className="mb-5">
-        <h2 id="titulo-cierres" className="h4 mb-3">Próximos cierres de inscripción</h2>
+        <h3 id="titulo-cierres" className="h4 mb-3">Próximos cierres de inscripción</h3>
         <ListGroup as="ul">
           {cierres.map((t) => (
             <ListGroup.Item as="li" key={t.id}>
@@ -33,7 +33,7 @@ export default function Inicio() {
       </section>
 
       <section aria-labelledby="titulo-video">
-        <h2 id="titulo-video" className="h4 mb-3">Final de la última temporada</h2>
+        <h3 id="titulo-video" className="h4 mb-3">Final de la última temporada</h3>
         <div className="ratio ratio-16x9">
           <video controls>
             <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />

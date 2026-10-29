@@ -30,7 +30,7 @@ export default function Torneos() {
 
   return (
     <section aria-labelledby="titulo-listado">
-      <h1 id="titulo-listado" className="mb-4">Listado de torneos</h1>
+      <h2 id="titulo-listado" className="mb-4">Listado de torneos</h2>
 
       <Form onSubmit={(e) => e.preventDefault()} className="mb-4">
         <Row className="g-3">
