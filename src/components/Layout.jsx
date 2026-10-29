@@ -4,7 +4,7 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 const ENLACES = [
     { seccion: "", to: "/", texto: "Inicio" },
     { seccion: "torneos", to: "/torneos", texto: "Torneos" },
-    { seccion: "torneo", to: "/torneo/t1", texto: "Inicio" },
+    { seccion: "torneo", to: "/torneo/t1", texto: "TorneoDetalle" },
     { seccion: "inscripcion", to: "/inscripcion", texto: "Inscripcion" },
     { seccion: "equipo", to: "/equipo", texto: "Mi equipo" },
     { seccion: "perfil", to:"/perfil", texto: "Mi perfil" },
