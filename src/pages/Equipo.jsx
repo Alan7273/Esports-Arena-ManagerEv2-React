@@ -50,7 +50,7 @@ export default function Equipo() {
 
   return (
     <section style={{ maxWidth: 700 }}>
-      <h1 className="mb-4">Crear / gestionar equipo</h1>
+      <h2 className="mb-4">Crear / gestionar equipo</h2>
       <Form onSubmit={enviar} onChange={() => setConfirmacion("")} noValidate>
         <Form.Group className="mb-3" controlId="equipo-nombre">
           <Form.Label>Nombre del equipo</Form.Label>

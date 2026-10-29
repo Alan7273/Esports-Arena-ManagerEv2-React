@@ -42,7 +42,7 @@ export default function Perfil() {
 
   return (
     <>
-      <h1 className="mb-4">Perfil de jugador</h1>
+      <h2 className="mb-4">Perfil de jugador</h2>
 
       <Row className="g-4 mb-4">
         <Col md={6}>
@@ -93,7 +93,7 @@ export default function Perfil() {
       </Row>
 
       <section style={{ maxWidth: 600 }}>
-        <h2 className="h4 mb-3">Editar datos</h2>
+        <h3 className="h4 mb-3">Editar datos</h3>
         <Form onSubmit={enviar} noValidate>
           {campo("perfil-apodo", "Apodo", "apodo", "text", "username", errores.apodo)}
           {campo("perfil-email", "Correo", "email", "email", "email", errores.email)}

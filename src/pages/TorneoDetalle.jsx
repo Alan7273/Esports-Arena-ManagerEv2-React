@@ -18,7 +18,7 @@ export default function TorneoDetalle() {
   return (
     <>
       <section className="mb-4">
-        <h1 className="mb-3">{t.nombre}</h1>
+        <h2 className="mb-3">{t.nombre}</h2>
         <Card body>
           <p className="mb-1">Juego: {nombreJuego(t.juegoId)} - Modalidad: {t.modalidad}</p>
           <p className="mb-1">Cupos disponibles: {t.cupoMax - t.cupoOcupado} de {t.cupoMax}</p>
@@ -27,7 +27,7 @@ export default function TorneoDetalle() {
       </section>
 
       <section className="mb-4">
-        <h2 className="h4 mb-3">Participantes inscritos</h2>
+        <h3 className="h4 mb-3">Participantes inscritos</h3>
         <ListGroup as="ul">
           {t.participantes.length
             ? t.participantes.map((p) => (
@@ -37,7 +37,7 @@ export default function TorneoDetalle() {
       </section>
 
       <section className="mb-4">
-        <h2 className="h4 mb-3">Calendario de partidas</h2>
+        <h3 className="h4 mb-3">Calendario de partidas</h3>
         <Table striped bordered hover responsive>
           <thead><tr><th>Ronda</th><th>Enfrentamiento</th><th>Fecha</th><th>Estado</th></tr></thead>
           <tbody>
@@ -55,7 +55,7 @@ export default function TorneoDetalle() {
       </section>
 
       <section className="mb-4">
-        <h2 className="h4 mb-3">Tabla de posiciones</h2>
+        <h3 className="h4 mb-3">Tabla de posiciones</h3>
         <Table bordered responsive>
           <thead><tr><th>Posición</th><th>Participante</th><th>Puntos</th></tr></thead>
           <tbody>
@@ -72,7 +72,7 @@ export default function TorneoDetalle() {
       </section>
 
       <section>
-        <h2 className="h4 mb-3">Premios</h2>
+        <h3 className="h4 mb-3">Premios</h3>
         <ListGroup as="ul">
           {t.premios.map((p) => (
             <ListGroup.Item as="li" key={p.posicion}>Puesto {p.posicion}: {p.premio}</ListGroup.Item>))}
