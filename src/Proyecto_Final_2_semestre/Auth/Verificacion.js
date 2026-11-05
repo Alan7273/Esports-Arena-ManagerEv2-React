@@ -1,0 +1,6 @@
+console.log('1. inicio')
+setTimeout(() => console.log('2. temporizador'), 0)
+fetch('https://jsonplaceholder.typicode.com/users/1')
+.then(() => console.log('3. respuesta del servidor'))
+Promise.resolve().then(() => console.log('4. promesa resuelta'))
+console.log('5. fin')
