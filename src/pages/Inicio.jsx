@@ -168,7 +168,7 @@ export default function Inicio() {
         <h2 id="titulo-video" className="mb-4">Final de la última temporada</h2>
         <div className="ratio ratio-16x9 ln-video">
           <video controls>
-            <source src="/videos/VALORANT-University-Duels-SnapYT.mp4" type="video/mp4" />
+            <source src="/videos/videofinal.mp4" type="video/mp4" />
             Tu navegador no soporta video embebido.
           </video>
         </div>
