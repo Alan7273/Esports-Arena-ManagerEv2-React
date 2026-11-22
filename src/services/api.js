@@ -19,6 +19,17 @@ export async function solicitar(ruta, opciones = {}) {
     },
 })
 
+// 401 fuera del login: el token venció o es inválido, se cierra la sesión
+if (res.status === 401 && !ruta.includes('/auth/')) {
+    alNoAutorizado()
+    throw new Error('Sesión expirada. Inicia sesión nuevamente.')
+}
+
+// 403: la sesión es válida, pero el rol no tiene permiso
+if (res.status === 403) {
+    throw new Error('No tienes permisos para realizar esta acción.')
+}
+
 if (!rest.ok){
     const cuerpo = await res.json().catch(() => ({}))
     throw new error (cuerpo.mensaje || cuerpo.mensaje || `Error ${res.status}`)

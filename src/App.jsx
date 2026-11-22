@@ -10,8 +10,6 @@ export default function App() {
         <Route path='login' element={<Login />} />
         <Route path='sin-permisos' element={<SinPermisos />} />
         <Route index element={<Inicio />} />
-        <Route path='torneos' element={<Torneos />} />
-        <Route path='torneo/:id' element={<TorneoDetalle />} />
 
         {/* Requieren estar logueado */}
         <Route element={<RutaProtegida />}>
@@ -22,6 +20,8 @@ export default function App() {
         <Route element={<RutaProtegida roles={['JUGADOR', 'ADMIN']} />}>
           <Route path='inscripcion' element={<Inscripcion />} />
           <Route path='equipo' element={<Equipo />} />
+          <Route path='torneos' element={<Torneos />} />
+          <Route path='torneo/:id' element={<TorneoDetalle />} />
         </Route>
 
         <Route path='*' element={<Navigate to='/' replace />} />
