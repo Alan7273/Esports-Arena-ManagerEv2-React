@@ -1,20 +1,11 @@
 import { useParams } from "react-router-dom";
 import { Alert, Card, ListGroup, Table } from "react-bootstrap";
-<<<<<<< HEAD
-import useApi from "../hooks/useApi.js";                                                    // <- CAMBIO
-import { obtenerTorneo, listarPartidas, listarRanking, listarPremios } from "../services/torneos.js";  // <- CAMBIO
-import { listarJuegos } from "../services/juegos.js";                                      // <- CAMBIO
-import { listarEquipos } from "../services/equipos.js";                                    // <- CAMBIO
-import { listarInscripciones } from "../services/inscripciones.js";                        // <- CAMBIO
-import EstadoCarga from "../components/EstadoCarga.jsx";                                   // <- CAMBIO
-=======
 import useApi from "../hooks/useApi.js";
 import { obtenerTorneo, listarPartidas, listarRanking, listarPremios } from "../services/torneos.js";
 import { listarJuegos } from "../services/juegos.js";
 import { listarEquipos } from "../services/equipos.js";
 import { listarInscripciones } from "../services/inscripciones.js";
 import EstadoCarga from "../components/EstadoCarga.jsx";
->>>>>>> a3dce2d6ab21ebccb208bad68271ad99f4b17e18
 import { useTitulo } from "../hooks/useTitulo.js";
 import { etiquetaPosicion, CLASE_PODIO } from "../utils/formato.js";
 import BadgeEstado from "../components/BadgeEstado.jsx";
