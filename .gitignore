@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Archivos de entorno (aquí va el tuyo)
+.env
+.env.*
+conexion.env
+*.env
