@@ -1,16 +1,21 @@
 import { useState } from "react";
 import { Alert, Col, Form, Row } from "react-bootstrap";
-import { useDatos } from "../context/DatosContext.js";
+import useApi from "../hooks/useApi.js";
+import { listarTorneos } from "../services/torneos.js";
+import { listarJuegos } from "../services/juegos.js";
+import EstadoCarga from "../components/EstadoCarga.jsx";
 import { useTitulo } from "../hooks/useTitulo.js";
 import TarjetaTorneo from "../components/TarjetaTorneo.jsx";
 
 export default function Torneos() {
-  const { torneos, juegos } = useDatos();
+  const { datos, cargando, error } = useApi(
+    () => Promise.all([listarTorneos(), listarJuegos()])
+  );
+  const [torneos = [], juegos = []] = datos ?? [];
   useTitulo("Torneos");
 
   const [filtros, setFiltros] = useState({ juego: "", estado: "", nombre: "", desde: "", hasta: "" });
   const cambiar = (e) => setFiltros({ ...filtros, [e.target.name]: e.target.value });
-
   const { juego, estado, nombre, desde, hasta } = filtros;
   const errorFechas = desde && hasta && desde > hasta
     ? "La fecha inicial no puede ser posterior a la final."
@@ -18,7 +23,7 @@ export default function Torneos() {
   const texto = nombre.trim().toLowerCase();
 
   const filtrados = torneos.filter((t) => {
-    if (juego && t.juegoId !== juego) return false;
+    if (juego && String(t.juegoId) !== juego) return false;
     if (estado && t.estado !== estado) return false;
     if (texto && !t.nombre.toLowerCase().includes(texto)) return false;
     if (!errorFechas) {
@@ -28,6 +33,8 @@ export default function Torneos() {
     return true;
   });
 
+  if (cargando || error) return <EstadoCarga cargando={cargando} error={error} />;
+  
   return (
     <section aria-labelledby="titulo-listado">
       <h2 id="titulo-listado" className="mb-4">Listado de torneos</h2>

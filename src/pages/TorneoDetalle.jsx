@@ -1,6 +1,11 @@
 import { useParams } from "react-router-dom";
 import { Alert, Card, ListGroup, Table } from "react-bootstrap";
-import { useDatos } from "../context/DatosContext.js";
+import useApi from "../hooks/useApi.js";
+import { obtenerTorneo, listarPartidas, listarRanking, listarPremios } from "../services/torneos.js";
+import { listarJuegos } from "../services/juegos.js";
+import { listarEquipos } from "../services/equipos.js";
+import { listarInscripciones } from "../services/inscripciones.js";
+import EstadoCarga from "../components/EstadoCarga.jsx";
 import { useTitulo } from "../hooks/useTitulo.js";
 import { etiquetaPosicion, CLASE_PODIO } from "../utils/formato.js";
 import BadgeEstado from "../components/BadgeEstado.jsx";
