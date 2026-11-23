@@ -1,76 +1,77 @@
 import { useState } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
-import { useDatos } from "../context/DatosContext.js";
+import useApi from "../hooks/useApi.js";
+import { listarTorneos } from "../services/torneos.js";
+import { listarEquipos } from "../services/equipos.js";
+import { crearInscripcion } from "../services/inscripciones.js";
+import EstadoCarga from "../components/EstadoCarga.jsx";
 import { useTitulo } from "../hooks/useTitulo.js";
-import { fechaHoy } from "../utils/formato.js";
-import { validarInscripcion } from "../utils/validaciones.js";
 
 export default function Inscripcion() {
-  const { torneos, equipos, juegos, jugadores, inscribirEquipo } = useDatos();
+  const { datos, cargando, error } = useApi(
+    () => Promise.all([listarTorneos(), listarEquipos()])
+  );
+  const [torneos = [], equipos = []] = datos ?? [];
   useTitulo("Inscripción");
 
   const [torneoId, setTorneoId] = useState("");
   const [equipoId, setEquipoId] = useState("");
-  const [tocado, setTocado] = useState(false);
+  const [errorForm, setErrorForm] = useState("");
   const [confirmacion, setConfirmacion] = useState("");
-
-  const torneo = torneos.find((x) => x.id === torneoId);
-  const equipo = equipos.find((x) => x.id === equipoId);
-  const resultado = validarInscripcion({ torneo, equipo, juegos, jugadores, hoy: fechaHoy() });
+  const [enviando, setEnviando] = useState(false);
 
   const alCambiar = (setter) => (e) => {
     setter(e.target.value);
-    setTocado(true);
+    setErrorForm("");
     setConfirmacion("");
   };
 
-  const enviar = (e) => {
+  const enviar = async (e) => {
     e.preventDefault();
-    setTocado(true);
-    if (!resultado.ok) return;
-    inscribirEquipo(torneo.id, equipo.id);
-    setTorneoId("");
-    setEquipoId("");
-    setTocado(false);
-    setConfirmacion("Inscripción registrada correctamente.");
+    if (!torneoId || !equipoId) {
+      setErrorForm("Selecciona un torneo y un equipo.");
+      return;
+    }
+    setEnviando(true);
+    try {
+      const equipo = equipos.find((x) => String(x.id) === equipoId);
+      await crearInscripcion({ torneoId, equipo });
+      setConfirmacion("Inscripción registrada correctamente.");
+      setTorneoId("");
+      setEquipoId("");
+    } catch (err) {
+      setErrorForm(err.message);   // el backend explica: cupo lleno, torneo cerrado, sanción activa...
+    } finally {
+      setEnviando(false);
+    }
   };
+
+  if (cargando || error) return <EstadoCarga cargando={cargando} error={error} />;
 
   return (
     <section style={{ maxWidth: 600 }}>
       <h2 className="mb-4">Inscripción a torneo</h2>
       <Form onSubmit={enviar} noValidate>
-        <Form.Group className="mb-3" controlId="insc-tipo">
-          <Form.Label>Tipo de participante</Form.Label>
-          <Form.Select name="tipo" defaultValue="equipo">
-            <option value="equipo">Equipo</option>
-          </Form.Select>
-        </Form.Group>
-
         <Form.Group className="mb-3" controlId="insc-torneo">
           <Form.Label>Torneo</Form.Label>
-          <Form.Select name="torneo" required value={torneoId} onChange={alCambiar(setTorneoId)}
-            isInvalid={tocado && !!resultado.torneo}>
+          <Form.Select value={torneoId} onChange={alCambiar(setTorneoId)}>
             <option value="">Selecciona un torneo</option>
             {torneos.map((t) => <option key={t.id} value={t.id}>{t.nombre}</option>)}
           </Form.Select>
-          <Form.Control.Feedback type="invalid">{resultado.torneo}</Form.Control.Feedback>
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="insc-equipo">
           <Form.Label>Equipo</Form.Label>
-          <Form.Select name="equipo" required value={equipoId} onChange={alCambiar(setEquipoId)}
-            isInvalid={tocado && !!resultado.equipo}>
+          <Form.Select value={equipoId} onChange={alCambiar(setEquipoId)}>
             <option value="">Selecciona un equipo</option>
             {equipos.map((eq) => <option key={eq.id} value={eq.id}>{eq.nombre}</option>)}
           </Form.Select>
-          <Form.Control.Feedback type="invalid">{resultado.equipo}</Form.Control.Feedback>
         </Form.Group>
 
-        {resultado.ok && (
-          <Alert variant="info">Vas a inscribir a &quot;{equipo.nombre}&quot; en &quot;{torneo.nombre}&quot;.</Alert>
-        )}
-
-        <Button type="submit" variant="primary">Confirmar inscripción</Button>
+        {errorForm && <Alert variant="danger">{errorForm}</Alert>}
+        <Button type="submit" variant="primary" disabled={enviando}>
+          {enviando ? "Enviando..." : "Confirmar inscripción"}
+        </Button>
         {confirmacion && <Alert variant="success" className="mt-3">{confirmacion}</Alert>}
       </Form>
     </section>

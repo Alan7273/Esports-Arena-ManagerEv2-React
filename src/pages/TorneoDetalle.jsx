@@ -1,19 +1,55 @@
 import { useParams } from "react-router-dom";
 import { Alert, Card, ListGroup, Table } from "react-bootstrap";
-import { useDatos } from "../context/DatosContext.js";
+import useApi from "../hooks/useApi.js";                                                    // <- CAMBIO
+import { obtenerTorneo, listarPartidas, listarRanking, listarPremios } from "../services/torneos.js";  // <- CAMBIO
+import { listarJuegos } from "../services/juegos.js";                                      // <- CAMBIO
+import { listarEquipos } from "../services/equipos.js";                                    // <- CAMBIO
+import { listarInscripciones } from "../services/inscripciones.js";                        // <- CAMBIO
+import EstadoCarga from "../components/EstadoCarga.jsx";                                   // <- CAMBIO
 import { useTitulo } from "../hooks/useTitulo.js";
 import { etiquetaPosicion, CLASE_PODIO } from "../utils/formato.js";
 import BadgeEstado from "../components/BadgeEstado.jsx";
 
+const INSCRIPCION_INACTIVA = ["CANCELADA", "CANCELADO", "RECHAZADO"];
+
 export default function TorneoDetalle() {
   const { id } = useParams();
-  const { torneos, nombreJuego, nombreParticipante } = useDatos();
-  const t = torneos.find((x) => x.id === (id || torneos[0].id));
+
+  // Un torneo se arma con datos de 7 servicios distintos, pedidos en paralelo
+  const { datos, cargando, error } = useApi(async () => {         // <- CAMBIO (todo este bloque)
+    const [torneo, partidas, posiciones, premios, juegos, equipos, inscripciones] =
+      await Promise.all([
+        obtenerTorneo(id),
+        listarPartidas(),
+        listarRanking(id).catch(() => []),   // si aún no hay ranking, la tabla queda vacía
+        listarPremios(),
+        listarJuegos(),
+        listarEquipos(),
+        listarInscripciones(),
+      ]);
+    const tid = Number(id);
+    return {
+      t: torneo,
+      partidas: partidas.filter((p) => p.torneoId === tid),
+      posiciones,
+      premios: premios.filter((p) => p.torneoId === tid),
+      juegos,
+      equipos,
+      participantes: inscripciones.filter(
+        (i) => i.torneoId === tid && !INSCRIPCION_INACTIVA.includes(i.estado)),
+    };
+  }, [id]);
+
+  const t = datos?.t;                                              // <- CAMBIO
   useTitulo(t ? t.nombre : "Detalle de torneo");
 
+  if (cargando || error) return <EstadoCarga cargando={cargando} error={error} />;   // <- CAMBIO
   if (!t) return <Alert variant="warning">Torneo no encontrado.</Alert>;
 
-  const posiciones = t.posiciones.slice().sort((a, b) => a.pos - b.pos);
+  const { partidas, premios, juegos, equipos, participantes } = datos;                // <- CAMBIO
+  const nombreJuego = (jid) => juegos.find((j) => j.id === jid)?.nombre ?? "-";       // <- CAMBIO
+  const nombreParticipante = (pid) => equipos.find((e) => e.id === pid)?.nombre ?? `#${pid}`;  // <- CAMBIO
+  const posiciones = datos.posiciones.slice().sort((a, b) => a.pos - b.pos);          // <- CAMBIO
 
   return (
     <>
@@ -21,7 +57,7 @@ export default function TorneoDetalle() {
         <h2 className="mb-3">{t.nombre}</h2>
         <Card body>
           <p className="mb-1">Juego: {nombreJuego(t.juegoId)} - Modalidad: {t.modalidad}</p>
-          <p className="mb-1">Cupos disponibles: {t.cupoMax - t.cupoOcupado} de {t.cupoMax}</p>
+          <p className="mb-1">Cupos disponibles: {t.cupoMax - participantes.length} de {t.cupoMax}</p>  {/* <- CAMBIO */}
           <p className="mb-0">Estado: <BadgeEstado estado={t.estado} /></p>
         </Card>
       </section>
@@ -29,9 +65,11 @@ export default function TorneoDetalle() {
       <section className="mb-4">
         <h3 className="h4 mb-3">Participantes inscritos</h3>
         <ListGroup as="ul">
-          {t.participantes.length
-            ? t.participantes.map((p) => (
-              <ListGroup.Item as="li" key={p}>{nombreParticipante(p)}</ListGroup.Item>))
+          {participantes.length                                                           /* <- CAMBIO */
+            ? participantes.map((p) => (
+              <ListGroup.Item as="li" key={p.inscripcionId}>
+                {p.nombreJugador ?? nombreParticipante(p.equipoId)}
+              </ListGroup.Item>))
             : <ListGroup.Item as="li">Aún no hay participantes inscritos.</ListGroup.Item>}
         </ListGroup>
       </section>
@@ -41,8 +79,8 @@ export default function TorneoDetalle() {
         <Table striped bordered hover responsive>
           <thead><tr><th>Ronda</th><th>Enfrentamiento</th><th>Fecha</th><th>Estado</th></tr></thead>
           <tbody>
-            {t.partidas.length
-              ? t.partidas.map((p) => (
+            {partidas.length                                                              /* <- CAMBIO */
+              ? partidas.map((p) => (
                 <tr key={p.id}>
                   <td>Ronda {p.ronda}</td>
                   <td>{p.equipos.map(nombreParticipante).join(" vs ")}</td>
@@ -74,8 +112,10 @@ export default function TorneoDetalle() {
       <section>
         <h3 className="h4 mb-3">Premios</h3>
         <ListGroup as="ul">
-          {t.premios.map((p) => (
-            <ListGroup.Item as="li" key={p.posicion}>Puesto {p.posicion}: {p.premio}</ListGroup.Item>))}
+          {premios.length                                                                 /* <- CAMBIO */
+            ? premios.map((p) => (
+              <ListGroup.Item as="li" key={p.posicion}>Puesto {p.posicion}: {p.premio}</ListGroup.Item>))
+            : <ListGroup.Item as="li">Premios aún no definidos.</ListGroup.Item>}
         </ListGroup>
       </section>
     </>

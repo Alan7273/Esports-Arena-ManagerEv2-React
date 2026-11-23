@@ -8,22 +8,14 @@ import './style/componentes.css';
 import './style/formularios.css';
 import './style/tablas.css';
 import App from './App.jsx';
-import DatosProvider from './context/DatosProvider.jsx';
 import AuthProvider from './context/AuthProvider.jsx';
-<BrowserRouter>
-  <AuthProvider>
-    <DatosProvider>
-      <App />
-    </DatosProvider>
-  </AuthProvider>
-</BrowserRouter>
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <DatosProvider>
+      <AuthProvider>
         <App />
-      </DatosProvider>
+      </AuthProvider>
     </BrowserRouter>
   </StrictMode>
 )

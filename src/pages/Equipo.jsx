@@ -1,28 +1,38 @@
 import { useState } from "react";
 import { Alert, Button, Col, Form, ListGroup, Row } from "react-bootstrap";
-import { useDatos } from "../context/DatosContext.js";
+import useApi from "../hooks/useApi.js";                                              // <- CAMBIO
+import { listarJuegos } from "../services/juegos.js";                                 // <- CAMBIO
+import { listarEquipos, crearEquipo, agregarMiembro } from "../services/equipos.js";  // <- CAMBIO
+import { listarJugadores } from "../services/usuarios.js";                            // <- CAMBIO
+import EstadoCarga from "../components/EstadoCarga.jsx";                              // <- CAMBIO
 import { useTitulo } from "../hooks/useTitulo.js";
 import { validarEquipo } from "../utils/validaciones.js";
 
 export default function Equipo() {
-  const { juegos, jugadores, equipos, crearEquipo } = useDatos();
+  const { datos, cargando, error, recargar } = useApi(                                // <- CAMBIO
+    () => Promise.all([listarJuegos(), listarJugadores(), listarEquipos()])
+  );
+  const [juegos = [], jugadores = [], equipos = []] = datos ?? [];                    // <- CAMBIO
   useTitulo("Mi equipo");
 
-  const FORM_VACIO = { nombre: "", juegoId: juegos[0].id, capitanId: "" };
-  const NUEVO_VACIO = { jugadorId: jugadores[0]?.id ?? "", rol: "" };
+  // Los juegos y jugadores llegan después, por eso los valores iniciales van vacíos
+  const FORM_VACIO = { nombre: "", juegoId: "", capitanId: "" };                      // <- CAMBIO
+  const NUEVO_VACIO = { jugadorId: "", rol: "" };                                     // <- CAMBIO
 
   const [form, setForm] = useState(FORM_VACIO);
   const [nuevo, setNuevo] = useState(NUEVO_VACIO);
   const [integrantes, setIntegrantes] = useState([]);
-  const [errores, setErrores] = useState({ nombre: "", capitan: "", integrantes: "" });
+  const [errores, setErrores] = useState({ nombre: "", juego: "", capitan: "", integrantes: "" });  // <- CAMBIO
   const [confirmacion, setConfirmacion] = useState("");
+  const [errorApi, setErrorApi] = useState("");                                       // <- CAMBIO
+  const [guardando, setGuardando] = useState(false);                                  // <- CAMBIO
 
   const cambiarForm = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-  const apodo = (id) => jugadores.find((j) => j.id === id)?.apodo ?? id;
+  const apodo = (id) => jugadores.find((j) => String(j.id) === String(id))?.apodo ?? id;   // <- CAMBIO (String)
 
   const agregar = () => {
     if (!nuevo.jugadorId) return;
-    if (integrantes.some((i) => i.jugadorId === nuevo.jugadorId)) {
+    if (integrantes.some((i) => String(i.jugadorId) === String(nuevo.jugadorId))) {   // <- CAMBIO (String)
       setErrores({ ...errores, integrantes: "Ese jugador ya está en el equipo." });
       return;
     }
@@ -31,22 +41,44 @@ export default function Equipo() {
     setNuevo({ ...nuevo, rol: "" });
   };
 
-  const quitar = (jugadorId) => setIntegrantes(integrantes.filter((i) => i.jugadorId !== jugadorId));
+  const quitar = (jugadorId) =>
+    setIntegrantes(integrantes.filter((i) => String(i.jugadorId) !== String(jugadorId)));   // <- CAMBIO (String)
 
-  const enviar = (e) => {
+  const enviar = async (e) => {                                                        // <- CAMBIO (async)
     e.preventDefault();
     setConfirmacion("");
+    setErrorApi("");
     const nombre = form.nombre.trim();
     const r = validarEquipo({ nombre, capitanId: form.capitanId, equipos });
-    setErrores({ nombre: r.nombre, capitan: r.capitan, integrantes: "" });
-    if (!r.ok) return;
+    const errJuego = form.juegoId ? "" : "Selecciona un juego.";                       // <- CAMBIO
+    setErrores({ nombre: r.nombre, juego: errJuego, capitan: r.capitan, integrantes: "" });
+    if (!r.ok || errJuego) return;
 
-    crearEquipo({ nombre, juegoId: form.juegoId, capitanId: form.capitanId, integrantes });
-    setConfirmacion(`Equipo "${nombre}" creado con éxito.`);
-    setForm(FORM_VACIO);
-    setNuevo(NUEVO_VACIO);
-    setIntegrantes([]);
+    setGuardando(true);                                                                // <- CAMBIO (todo el bloque try)
+    try {
+      const nuevoEquipo = await crearEquipo({
+        nombre, juegoId: form.juegoId, capitanId: form.capitanId,
+      });
+      // El capitán también es miembro: se agrega primero si no está en la lista
+      const lista = integrantes.some((i) => String(i.jugadorId) === String(form.capitanId))
+        ? integrantes
+        : [{ jugadorId: form.capitanId, rol: "Capitán" }, ...integrantes];
+      for (const i of lista) {
+        await agregarMiembro(nuevoEquipo.id, i.jugadorId, i.rol);
+      }
+      setConfirmacion(`Equipo "${nombre}" creado con éxito.`);
+      setForm(FORM_VACIO);
+      setNuevo(NUEVO_VACIO);
+      setIntegrantes([]);
+      recargar();
+    } catch (err) {
+      setErrorApi(err.message);
+    } finally {
+      setGuardando(false);
+    }
   };
+
+  if (cargando || error) return <EstadoCarga cargando={cargando} error={error} />;   // <- CAMBIO
 
   return (
     <section style={{ maxWidth: 700 }}>
@@ -61,9 +93,12 @@ export default function Equipo() {
 
         <Form.Group className="mb-3" controlId="equipo-juego">
           <Form.Label>Juego principal</Form.Label>
-          <Form.Select name="juegoId" required value={form.juegoId} onChange={cambiarForm}>
+          <Form.Select name="juegoId" required value={form.juegoId} onChange={cambiarForm}
+            isInvalid={!!errores.juego}>                                               {/* <- CAMBIO */}
+            <option value="">Selecciona un juego</option>                              {/* <- CAMBIO */}
             {juegos.map((j) => <option key={j.id} value={j.id}>{j.nombre}</option>)}
           </Form.Select>
+          <Form.Control.Feedback type="invalid">{errores.juego}</Form.Control.Feedback>   {/* <- CAMBIO */}
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="equipo-capitan">
@@ -84,6 +119,7 @@ export default function Equipo() {
                 <Form.Label>Jugador</Form.Label>
                 <Form.Select value={nuevo.jugadorId}
                   onChange={(e) => setNuevo({ ...nuevo, jugadorId: e.target.value })}>
+                  <option value="">Selecciona un jugador</option>                      {/* <- CAMBIO */}
                   {jugadores.map((j) => <option key={j.id} value={j.id}>{j.apodo}</option>)}
                 </Form.Select>
               </Form.Group>
@@ -115,7 +151,10 @@ export default function Equipo() {
           </ListGroup>
         </fieldset>
 
-        <Button type="submit" variant="primary">Guardar equipo</Button>
+        {errorApi && <Alert variant="danger">{errorApi}</Alert>}                       {/* <- CAMBIO */}
+        <Button type="submit" variant="primary" disabled={guardando}>                  {/* <- CAMBIO */}
+          {guardando ? "Guardando..." : "Guardar equipo"}
+        </Button>
         {confirmacion && <Alert variant="success" className="mt-3">{confirmacion}</Alert>}
       </Form>
     </section>
