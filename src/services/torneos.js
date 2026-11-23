@@ -1,6 +1,10 @@
 import { solicitar } from './api'
+import { aTorneo, aPartida, aPosicion, aPremio } from './mapeadores'
 
-export const listarTorneos = () => solicitar('/api/v1/torneos')
-export const obtenerTorneo = (id) => solicitar(`/api/v1/torneos/${id}`)
-export const crearTorneo = (dto) => solicitar('/api/v1/torneos', { method: 'POST', body: JSON.stringify(dto) })
-export const eliminarTorneo = (id) => solicitar(`/api/v1/torneos/${id}`, { method: 'DELETE' })
+export const listarTorneos = () => solicitar('/api/v1/torneos').then((l) => l.map(aTorneo))
+export const obtenerTorneo = (id) => solicitar(`/api/v1/torneos/${id}`).then(aTorneo)
+
+export const listarPartidas = () => solicitar('/api/v1/partidas').then((l) => l.map(aPartida))
+export const listarRanking = (torneoId) =>
+  solicitar(`/api/v1/rankings/${torneoId}`).then((l) => l.map(aPosicion))
+export const listarPremios = () => solicitar('/api/v1/premios').then((l) => l.map(aPremio))

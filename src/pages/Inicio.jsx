@@ -1,12 +1,15 @@
 import { ListGroup, Row } from "react-bootstrap";
-import { useDatos } from "../context/DatosContext.js";
+import useApi from "../hooks/useApi.js";
+import { listarTorneos } from "../services/torneos.js";
+import EstadoCarga from "../components/EstadoCarga.jsx";
 import { useTitulo } from "../hooks/useTitulo.js";
 import TarjetaTorneo from "../components/TarjetaTorneo.jsx";
 
 export default function Inicio() {
-  const { torneos } = useDatos();
+  const { datos: torneos = [], cargando, error } = useApi(listarTorneos);
   useTitulo("Inicio");
 
+  if (cargando || error) return <EstadoCarga cargando={cargando} error={error} />;
   const destacados = torneos.filter((t) => t.estado === "abierto" || t.estado === "en_curso");
   const cierres = torneos
     .filter((t) => t.estado === "abierto")
