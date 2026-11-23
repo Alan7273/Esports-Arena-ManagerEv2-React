@@ -1,5 +1,8 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
+import { createContext } from 'react'
+
+export const AuthContext = createContext(null)
 
 // roles opcional: si no lo pasas, basta con estar logueado
 export default function RutaProtegida({ roles }) {
