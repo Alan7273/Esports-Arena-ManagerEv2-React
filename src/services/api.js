@@ -30,9 +30,9 @@ if (res.status === 403) {
     throw new Error('No tienes permisos para realizar esta acción.')
 }
 
-if (!rest.ok){
+if (!res.ok){
     const cuerpo = await res.json().catch(() => ({}))
-    throw new error (cuerpo.mensaje || cuerpo.mensaje || `Error ${res.status}`)
+    throw new error ( cuerpo.mensaje || `Error ${res.status}`)
 }
 return res.status === 204 ? null : res.json()
 
