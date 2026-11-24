@@ -203,9 +203,9 @@ export default function Inicio() {
       <section className="ln-wrap ln-sec" aria-labelledby="titulo-video">
         <p className="ln-eyebrow">Replay</p>
         <h2 id="titulo-video" className="mb-4">Final de la última temporada</h2>
-        <div className="ratio ratio-16x9 ln-video">
-          <video controls>
-            <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
+        <div className="ratio ratio-16x9">
+          <video controls poster="/videos/portada.jpg">
+            <source src="/public/video/videofinal.mp4" type="video/mp4"/>
             Tu navegador no soporta video embebido.
           </video>
         </div>
