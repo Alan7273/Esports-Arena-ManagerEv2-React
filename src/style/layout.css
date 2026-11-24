@@ -3,45 +3,62 @@
    ========================================================= */
 .navbar.navbar-arena {
   --bs-navbar-color: var(--arena-texto);
-  --bs-navbar-hover-color: var(--arena-texto);
-  --bs-navbar-active-color: var(--arena-texto-boton);
-  --bs-navbar-brand-color: var(--arena-primario); /* título grande: cumple 3:1 */
-  --bs-navbar-brand-hover-color: var(--arena-primario-claro);
-  --bs-navbar-brand-active-color: var(--arena-primario-claro);
+  --bs-navbar-hover-color: var(--arena-acento);
+  --bs-navbar-active-color: var(--arena-acento);
+  --bs-navbar-brand-color: var(--arena-texto);
+  --bs-navbar-brand-hover-color: var(--arena-texto);
+  --bs-navbar-brand-active-color: var(--arena-texto);
   background: var(--arena-superficie);
-  border-bottom: 2px solid var(--arena-primario);
+  border-bottom: 1px solid rgba(241, 236, 255, 0.16);
 }
 
 .navbar-arena .navbar-brand {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-family: var(--arena-fuente-titulo);
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.navbar-arena .navbar-brand span {
+  color: var(--arena-acento);
 }
 
 .navbar-arena .navbar-nav {
-  gap: 0.4rem;
+  gap: 0.2rem;
 }
 
 .navbar-arena .nav-link {
-  padding: 0.4rem 0.6rem;
-  border: 1px solid transparent;
-  border-radius: var(--arena-radio);
-}
-
-.navbar-arena .nav-link:hover {
-  border-color: var(--arena-primario);
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: none;
+  border: 0;
 }
 
 /* Página actual: el color es refuerzo, el indicador real es aria-current/active */
 .navbar-arena .nav-link.active {
-  background: var(--arena-primario);
-  color: var(--arena-texto-boton);
+  color: var(--arena-acento);
+  box-shadow: inset 0 -2px 0 var(--arena-acento);
+}
+
+.navbar-arena .nav-link.ln-entrar {
+  border: 1px solid rgba(241, 236, 255, 0.5);
+  border-radius: 999px;
+  padding: 0 1.4rem;
+}
+
+.navbar-arena .nav-link.ln-entrar:hover {
+  border-color: var(--arena-acento);
 }
 
 .footer-arena {
   background: var(--arena-superficie);
+  border-top: 1px solid rgba(241, 236, 255, 0.16);
   color: var(--arena-texto);
   text-align: center;
   padding: 1.2rem;
-  margin-top: 3rem;
-  opacity: 0.85;
 }

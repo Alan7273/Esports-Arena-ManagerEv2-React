@@ -3,7 +3,9 @@ const ESTADOS = {
   CERRADO: 'finalizado', CANCELADO: 'finalizado',
 }
 
-export const aJuego = (j) => ({ id: j.juegosId, nombre: j.nombrejuegos })
+export const aJuego = (j) => ({
+  id: j.juegosId, nombre: j.nombrejuegos, minIntegrantes: j.jugadores_por_equipo,
+})
 
 export const aTorneo = (t) => ({
   id: t.torneoId,

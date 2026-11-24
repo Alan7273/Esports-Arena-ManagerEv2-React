@@ -1,30 +1,26 @@
 import { useParams } from "react-router-dom";
 import { Alert, Card, ListGroup, Table } from "react-bootstrap";
 import useApi from "../hooks/useApi.js";
-import { obtenerTorneo, listarPartidas, listarRanking, listarPremios } from "../services/torneos.js";
+import { obtenerTorneo, listarPartidas, listarRanking, listarPremios, INSCRIPCION_INACTIVA } from "../services/torneos.js";
 import { listarJuegos } from "../services/juegos.js";
-import { listarEquipos } from "../services/equipos.js";
 import { listarInscripciones } from "../services/inscripciones.js";
 import EstadoCarga from "../components/EstadoCarga.jsx";
 import { useTitulo } from "../hooks/useTitulo.js";
 import { etiquetaPosicion, CLASE_PODIO } from "../utils/formato.js";
 import BadgeEstado from "../components/BadgeEstado.jsx";
 
-const INSCRIPCION_INACTIVA = ["CANCELADA", "CANCELADO", "RECHAZADO"];
-
 export default function TorneoDetalle() {
   const { id } = useParams();
 
   // Un torneo se arma con datos de 7 servicios distintos, pedidos en paralelo
   const { datos, cargando, error } = useApi(async () => {         // <- CAMBIO (todo este bloque)
-    const [torneo, partidas, posiciones, premios, juegos, equipos, inscripciones] =
+    const [torneo, partidas, posiciones, premios, juegos, inscripciones] =
       await Promise.all([
         obtenerTorneo(id),
         listarPartidas(),
         listarRanking(id).catch(() => []),   // si aún no hay ranking, la tabla queda vacía
         listarPremios(),
         listarJuegos(),
-        listarEquipos(),
         listarInscripciones(),
       ]);
     const tid = Number(id);
@@ -34,7 +30,7 @@ export default function TorneoDetalle() {
       posiciones,
       premios: premios.filter((p) => p.torneoId === tid),
       juegos,
-      equipos,
+      inscripciones: inscripciones.filter((i) => i.torneoId === tid),
       participantes: inscripciones.filter(
         (i) => i.torneoId === tid && !INSCRIPCION_INACTIVA.includes(i.estado)),
     };
@@ -46,9 +42,12 @@ export default function TorneoDetalle() {
   if (cargando || error) return <EstadoCarga cargando={cargando} error={error} />;   // <- CAMBIO
   if (!t) return <Alert variant="warning">Torneo no encontrado.</Alert>;
 
-  const { partidas, premios, juegos, equipos, participantes } = datos;                // <- CAMBIO
+  const { partidas, premios, juegos, inscripciones, participantes } = datos;                // <- CAMBIO
   const nombreJuego = (jid) => juegos.find((j) => j.id === jid)?.nombre ?? "-";       // <- CAMBIO
-  const nombreParticipante = (pid) => equipos.find((e) => e.id === pid)?.nombre ?? `#${pid}`;  // <- CAMBIO
+  // El participante es un equipo o, en torneos individuales, un jugador: el nombre viene de la inscripción
+  const nombreParticipante = (pid) =>
+    inscripciones.find((i) => (t.modalidad === "Individual" ? i.usuarioId : i.equipoId) === pid)
+      ?.nombreJugador ?? `#${pid}`;
   const posiciones = datos.posiciones.slice().sort((a, b) => a.pos - b.pos);          // <- CAMBIO
 
   return (

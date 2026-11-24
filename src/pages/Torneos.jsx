@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { Alert, Col, Form, Row } from "react-bootstrap";
 import useApi from "../hooks/useApi.js";
-import { listarTorneos } from "../services/torneos.js";
+import { listarTorneos, conCupos } from "../services/torneos.js";
 import { listarJuegos } from "../services/juegos.js";
+import { listarInscripciones } from "../services/inscripciones.js";
 import EstadoCarga from "../components/EstadoCarga.jsx";
 import { useTitulo } from "../hooks/useTitulo.js";
 import TarjetaTorneo from "../components/TarjetaTorneo.jsx";
 
 export default function Torneos() {
-  const { datos, cargando, error } = useApi(
-    () => Promise.all([listarTorneos(), listarJuegos()])
-  );
+  const { datos, cargando, error } = useApi(async () => {
+    const [torneos, juegos, inscripciones] = await Promise.all([
+      listarTorneos(), listarJuegos(), listarInscripciones(),
+    ]);
+    return [conCupos(torneos, juegos, inscripciones), juegos];
+  });
   const [torneos = [], juegos = []] = datos ?? [];
   useTitulo("Torneos");
 

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Form, Button, Alert, Card } from 'react-bootstrap'
 import useAuth from '../hooks/useAuth'
 
@@ -46,6 +46,15 @@ export default function Login() {
             {cargando ? 'Ingresando...' : 'Entrar'}
           </Button>
         </Form>
+
+        <div className="text-center mt-3">
+          <small className="text-secondary">
+            ¿No tienes cuenta?{' '}
+            <Link to="/registro" className="text-decoration-none fw-semibold">
+              Regístrate aquí
+            </Link>
+          </small>
+        </div>
       </Card.Body>
     </Card>
   )

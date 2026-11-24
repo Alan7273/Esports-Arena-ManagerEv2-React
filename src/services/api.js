@@ -21,6 +21,8 @@ export async function solicitar(ruta, opciones = {}) {
 
 // 401 fuera del login: el token venció o es inválido, se cierra la sesión
 if (res.status === 401 && !ruta.includes('/auth/')) {
+    // Sin token: el gateway exige sesión para leer datos, no es una sesión vencida
+    if (!token) throw new Error('Inicia sesión para ver esta información.')
     alNoAutorizado()
     throw new Error('Sesión expirada. Inicia sesión nuevamente.')
 }
@@ -32,7 +34,7 @@ if (res.status === 403) {
 
 if (!res.ok){
     const cuerpo = await res.json().catch(() => ({}))
-    throw new error ( cuerpo.mensaje || `Error ${res.status}`)
+    throw new Error(cuerpo.mensaje || cuerpo.message || `Error ${res.status}`)
 }
 return res.status === 204 ? null : res.json()
 

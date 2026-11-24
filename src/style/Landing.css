@@ -1,0 +1,148 @@
+/* =========================================================
+   LANDING "Arena Elite": portada de Inicio y detalles de tarjetas
+   Usa solo la paleta de paleta.css. Cargar DESPUÉS de paleta.css.
+   ========================================================= */
+:root {
+  --arena-fuente-titulo: 'Syne', 'Segoe UI', Arial, sans-serif;
+  --arena-fuente-texto: 'DM Sans', 'Segoe UI', Arial, sans-serif;
+  --arena-texto-suave: #CFC6E6; /* 11:1 sobre el fondo */
+  --bs-body-font-family: var(--arena-fuente-texto);
+}
+
+.ln-pagina { overflow: hidden; }
+.ln-pagina h1, .ln-pagina h2, .ln-pagina h3 {
+  font-family: var(--arena-fuente-titulo);
+  color: var(--arena-texto);
+}
+.ln-suave { color: var(--arena-texto-suave); }
+.ln-wrap { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+.ln-eyebrow {
+  margin: 0; font-size: .8rem; font-weight: 500;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--arena-acento);
+}
+
+/* ---- Botones ---- */
+.ln-btn {
+  display: inline-flex; align-items: center; min-height: 52px;
+  padding: 0 1.9rem; border-radius: 999px; font-weight: 700;
+}
+.ln-btn.btn-primary { box-shadow: 0 10px 40px rgba(145, 70, 255, .45); }
+
+/* ---- Tarjetas ---- */
+.ln-tarjeta {
+  background: var(--arena-superficie);
+  border: 1px solid rgba(241, 236, 255, .16);
+  border-radius: 20px; padding: 2rem;
+}
+.ln-tarjeta h3 { font-size: 1.6rem; margin: 0 0 .5rem; }
+.ln-tarjeta-destacada {
+  border-color: var(--arena-primario);
+  box-shadow: 0 30px 80px rgba(145, 70, 255, .3);
+}
+
+/* ---- Hero (primera vista) ---- */
+.ln-hero {
+  position: relative; padding: 4rem 0 5rem;
+  border-bottom: 1px solid rgba(241, 236, 255, .12);
+}
+.ln-hex {
+  position: absolute; right: -18rem; top: -4rem; width: 56rem; max-width: none;
+  opacity: .5; pointer-events: none;
+}
+.ln-hero-grid {
+  position: relative; display: grid; grid-template-columns: 1fr;
+  gap: 3rem; align-items: center;
+}
+@media (min-width: 992px) {
+  .ln-hero-grid { grid-template-columns: 1.2fr 1fr; gap: 4rem; }
+}
+.ln-titulo {
+  margin: 1.5rem 0; font-size: clamp(3.2rem, 9vw, 6.5rem);
+  line-height: .95; letter-spacing: -.03em; font-weight: 800;
+}
+.ln-titulo span { color: var(--arena-acento); }
+.ln-lead { font-size: 1.25rem; line-height: 1.55; max-width: 29rem; margin-bottom: 2.2rem; }
+
+/* Cuadrícula de lugares: un cuadro por cupo (ocupado = relleno, libre = punteado) */
+.ln-lugares {
+  list-style: none; margin: 1.5rem 0; padding: 0;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: .6rem;
+}
+.ln-lugares li {
+  height: 56px; display: flex; align-items: center; justify-content: center;
+  border: 1px dashed rgba(241, 236, 255, .35); border-radius: 10px;
+  color: var(--arena-texto-suave); font-weight: 700;
+}
+.ln-lugares li.ocupado {
+  background: var(--arena-primario); border: 1px solid var(--arena-primario-claro);
+  color: var(--arena-texto-boton);
+}
+.ln-tarjeta-pie {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  padding-top: 1.2rem; border-top: 1px solid rgba(241, 236, 255, .16);
+}
+.ln-fecha { font-family: var(--arena-fuente-titulo); font-size: 1.6rem; font-weight: 700; }
+.ln-pill {
+  background: var(--arena-acento); color: var(--arena-fondo);
+  border-radius: 999px; padding: .35rem .9rem; font-size: .8rem; font-weight: 700;
+}
+
+/* Entrada suave de la portada (se desactiva si el usuario pide menos movimiento) */
+@media (prefers-reduced-motion: no-preference) {
+  .ln-hero-grid > * { animation: ln-subir .7s ease both; }
+  .ln-hero-grid > *:nth-child(2) { animation-delay: .15s; }
+  @keyframes ln-subir { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+}
+
+/* ---- Franja de juegos ---- */
+.ln-franja {
+  list-style: none; display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 1rem;
+  padding-top: 1.6rem; padding-bottom: 1.6rem; margin-top: 0; margin-bottom: 0;
+  font-size: .8rem; letter-spacing: .2em; text-transform: uppercase; color: var(--arena-texto-suave);
+}
+
+/* ---- Secciones ---- */
+.ln-sec { padding-top: 6rem; }
+.ln-sec h2 { margin: .8rem 0 0; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; letter-spacing: -.02em; }
+.ln-grid { display: grid; gap: 1.5rem; margin-top: 2.5rem; grid-template-columns: 1fr; }
+@media (min-width: 992px) {
+  .ln-grid-premios { grid-template-columns: 1.4fr 1fr; }
+  .ln-grid-3 { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 768px) and (max-width: 991.98px) { .ln-grid-3 { grid-template-columns: repeat(2, 1fr); } }
+
+.ln-tarjeta-grande { padding: 2.5rem; }
+.ln-monto { font-family: var(--arena-fuente-titulo); font-size: clamp(2.6rem, 6vw, 4rem); font-weight: 800; margin: .5rem 0; }
+.ln-extra { color: var(--arena-acento); font-weight: 700; font-size: 1.25rem; }
+.ln-valor { font-family: var(--arena-fuente-titulo); font-size: 1.5rem; font-weight: 700; }
+
+.ln-pasos { list-style: none; padding: 0; }
+.ln-pasos li { border-top: 1px solid rgba(241, 236, 255, .16); padding-top: 1.3rem; }
+.ln-numero { font-family: var(--arena-fuente-titulo); font-size: 3.5rem; font-weight: 800; color: var(--arena-primario); }
+.ln-pasos h3 { font-size: 1.5rem; margin: .4rem 0; }
+
+.ln-video { border-radius: 20px; overflow: hidden; border: 1px solid rgba(241, 236, 255, .16); }
+.ln-final { padding-bottom: 2rem; }
+.ln-final .ln-tarjeta { padding: 4rem 1.5rem; }
+.ln-final-titulo { font-size: clamp(2rem, 5vw, 3.5rem) !important; margin: 1rem 0 2rem !important; }
+
+/* =========================================================
+   Torneos: tarjetas y estados (también afecta /torneos)
+   ========================================================= */
+.tarjeta-torneo { border-radius: 16px; border-top: 3px solid var(--arena-secundario); }
+.tarjeta-torneo.tarjeta-abierto { border-top-color: var(--arena-acento); }
+.tarjeta-torneo.tarjeta-en_curso { border-top-color: var(--arena-primario); }
+.progress {
+  --bs-progress-height: .5rem;
+  --bs-progress-bg: var(--arena-secundario);
+  --bs-progress-bar-bg: var(--arena-acento);
+  border-radius: 999px;
+}
+/* "en curso" usaba amarillo de Bootstrap (fuera de la paleta): se pasa al violeta */
+.badge.bg-warning {
+  background: transparent !important; color: var(--arena-primario-claro) !important;
+  border: 1px solid var(--arena-primario-claro);
+}
+.badge.bg-secondary { border: 1px solid rgba(241, 236, 255, .6); background: transparent !important; }
+
+h1, h2, h3 { font-family: var(--arena-fuente-titulo); }
